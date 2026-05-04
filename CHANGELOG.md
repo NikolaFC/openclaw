@@ -68,6 +68,8 @@ Docs: https://docs.openclaw.ai
 
 ### Fixes
 
+- Gateway/sessions.list: add a short-lived result cache with in-flight dedupe keyed by runtime config/store path/list params, and clear that cache on session-change broadcasts so repeated Control UI refreshes avoid duplicate heavy session scans while staying fresh after writes. Thanks @NikolaFC.
+- Plugins/manifest model-id normalization: add a bounded TTL reuse window for resolved provider normalization policies when the config fingerprint is unchanged, reducing repeated metadata-policy scans in hot paths. Thanks @NikolaFC.
 - Video generation: wait up to 20 minutes for slow fal/MiniMax queue-backed jobs, stop forwarding unsupported Google Veo generated-audio options, and normalize MiniMax `720P` requests to its supported `768P` resolution with the usual override warning/details instead of failing fallback.
 - Video generation: accept provider-specific aspect-ratio and resolution hints at the tool boundary, normalize `720P` to MiniMax's supported `768P`, and stop sending Google `generateAudio` on Gemini video requests so provider fallback can recover from model-specific parameter differences. Thanks @vincentkoc.
 - OpenAI/Google Meet: fail realtime voice connection attempts when the socket closes before `session.updated`, avoiding stuck Meet joins waiting on a bridge that never became ready. Thanks @vincentkoc.
